@@ -1,21 +1,19 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
+import { currentUser } from "../middlewares/current-user";
+
 const router = express.Router();
 
-router.get("/api/users/currentuser", (req: Request, res: Response) => {
-  if (!req.session?.jwt) {
-    // equals to !req.session || !res.session.jwt
-
-    return res.status(401).send({ currentUser: null });
+router.get(
+  "/api/users/currentuser",
+  currentUser,
+  (req: Request, res: Response) => {
+    let status: number;
+    if (!req.currentUser) status = 401;
+    else status = 200;
+    return res.status(status).send({ currentUser: req.currentUser || null });
   }
-
-  try {
-    const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
-    return res.status(200).send({ currentUser: payload });
-  } catch (err) {
-    return res.status(401).send({ currentUser: null });
-  }
-});
+);
 
 export { router as currentUserRouter };
