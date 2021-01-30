@@ -31,6 +31,7 @@ router.post(
       throw new BadRequestError("E-mail is already in use");
     }
 
+    // generate and persist user
     const user = User.build({
       email,
       password,
