@@ -7,13 +7,7 @@ describe(route, () => {
   describe('POST', () => {
     describe('successful', () => {
       it('returns status 201 if correct payload', async () => {
-        await request(app)
-          .post(route)
-          .send({
-            email: 'test@test.com',
-            password: 'password',
-          })
-          .expect(201)
+        await global.signup()
       })
     })
 
@@ -57,13 +51,7 @@ describe(route, () => {
 
     describe('behaviour', () => {
       it('disallows duplicate emails', async () => {
-        await request(app)
-          .post(route)
-          .send({
-            email: 'test@test.com',
-            password: 'password',
-          })
-          .expect(201)
+        await global.signup()
 
         await request(app)
           .post(route)

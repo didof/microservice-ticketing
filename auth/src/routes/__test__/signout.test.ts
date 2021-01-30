@@ -6,13 +6,7 @@ const route = '/api/users/signout'
 describe(route, () => {
   describe('POST', () => {
     beforeEach(async () => {
-      await request(app)
-        .post('/api/users/signup')
-        .send({
-          email: 'test@test.com',
-          password: 'password',
-        })
-        .expect(201)
+      await global.signup()
     })
     describe('successful', () => {
       it('returns status 200 if successful', async () => {

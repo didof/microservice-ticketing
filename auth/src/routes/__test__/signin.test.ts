@@ -7,13 +7,7 @@ describe(route, () => {
   describe('POST', () => {
     describe('successful', () => {
       beforeEach(async () => {
-        await request(app)
-          .post('/api/users/signup')
-          .send({
-            email: 'test@test.com',
-            password: 'password',
-          })
-          .expect(201)
+        await global.signup()
       })
 
       it('returns status 201 if correct payload', async () => {
