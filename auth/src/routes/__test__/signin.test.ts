@@ -1,11 +1,21 @@
 import request from 'supertest'
 import { app } from '../../app'
 
-const route = '/api/users/signup'
+const route = '/api/users/signin'
 
 describe(route, () => {
   describe('POST', () => {
     describe('successful', () => {
+      beforeEach(async () => {
+        await request(app)
+          .post('/api/users/signup')
+          .send({
+            email: 'test@test.com',
+            password: 'password',
+          })
+          .expect(201)
+      })
+
       it('returns status 201 if correct payload', async () => {
         await request(app)
           .post(route)
@@ -13,7 +23,7 @@ describe(route, () => {
             email: 'test@test.com',
             password: 'password',
           })
-          .expect(201)
+          .expect(200)
       })
     })
 
@@ -24,6 +34,7 @@ describe(route, () => {
           .send({ password: 'password' })
           .expect(400)
       })
+
       it('returs status 400 if invalid email', async () => {
         await request(app)
           .post(route)
@@ -40,6 +51,7 @@ describe(route, () => {
           .send({ email: 'test@test.com' })
           .expect(400)
       })
+
       it('returs status 400 if invalid password', async () => {
         await request(app)
           .post(route)
@@ -56,20 +68,32 @@ describe(route, () => {
     })
 
     describe('behaviour', () => {
-      it('disallows duplicate emails', async () => {
+      beforeEach(async () => {
         await request(app)
-          .post(route)
+          .post('/api/users/signup')
           .send({
             email: 'test@test.com',
             password: 'password',
           })
           .expect(201)
+      })
 
+      it('returns 400 if email not corresponds to any in db', async () => {
+        await request(app)
+          .post(route)
+          .send({
+            email: 'johndoe@test.com',
+            password: 'password',
+          })
+          .expect(400)
+      })
+
+      it('returns 400 if user exits but password is wrong', async () => {
         await request(app)
           .post(route)
           .send({
             email: 'test@test.com',
-            password: 'password',
+            password: 'wrongpassword',
           })
           .expect(400)
       })
@@ -81,7 +105,7 @@ describe(route, () => {
             email: 'test@test.com',
             password: 'password',
           })
-          .expect(201)
+          .expect(200)
 
         expect(response.get('Set-Cookie')).toBeDefined()
       })
