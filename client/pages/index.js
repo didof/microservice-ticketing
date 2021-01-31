@@ -1,12 +1,13 @@
 import buildClient from '../api/build-client'
+import LandingPageLogic from '../components/pages/landing-page/LandingPageLogic'
 
 const LandingPage = ({ currentUser }) => {
-  console.log(currentUser)
-  return <h1>Landing Page</h1>
+  return <LandingPageLogic currentUser={currentUser} />
 }
 
 LandingPage.getInitialProps = async ctx => {
-  const { data } = await buildClient(ctx).get('/api/users/currentuser')
+  const client = buildClient(ctx)
+  const { data } = await client.get('/api/users/currentuser')
   return data
 }
 
