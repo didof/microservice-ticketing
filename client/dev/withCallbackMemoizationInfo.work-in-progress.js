@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const extractFunctionsShallow = obj => {
+const extractGroupsOfFunctionsShallow = obj => {
   const object = Object.assign({}, obj)
   let output = {}
 
@@ -23,18 +23,20 @@ const extractFunctionsShallow = obj => {
 }
 
 const WithCallbackMemoizationInfo = Component => componentProps => {
-  const groups = []
-  const sets = []
-  const extractedFunctions = extractFunctionsShallow(componentProps)
+  let counter = 0
+  const [sets, setSets] = useState([])
+  const groups = extractGroupsOfFunctionsShallow(componentProps)
 
-  Object.entries(extractedFunctions).forEach(([group, functions]) => {
-    groups.push(group)
-    sets.push(new Set(functions))
-  })
+  useEffect(() => {
+    const settified = Object.entries(groups).map(([group, functions]) => ({
+      name: group,
+      set: new Set(functions),
+    }))
+    setSets(settified)
+  }, [])
 
-  sets.forEach((set, index) => {
-    console.log(`watching group [${groups[index]}]...`)
-    console.info(set)
+  sets.forEach(({ name, set }) => {
+    console.info(`watching group [${name}]...`)
   })
 
   return <Component {...componentProps} />

@@ -1,5 +1,3 @@
-import WithCallbackMemoizationInfo from '../../dev/withCallbackMemoizationInfo'
-
 const SignupRps = ({ values, business, refs }) => {
   const { email, password, isButtonDisabled } = values
   const {
@@ -48,4 +46,4 @@ const SignupRps = ({ values, business, refs }) => {
   )
 }
 
-export default WithCallbackMemoizationInfo(SignupRps)
+export default SignupRps
