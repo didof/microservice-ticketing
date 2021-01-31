@@ -3,17 +3,17 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Router from 'next/router'
 
 // rps
-import SignupRps from './SignupRps'
+import SigninRps from './SigninRps'
 
 import useRequest from '../../../hooks/use-request'
 
-const Signup = () => {
+const Signin = ({ authService }) => {
   const [email, setEmail] = useState('test@test.com')
   const [password, setPassword] = useState('12345678')
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
   const [doRequest, errors] = useRequest(
     {
-      url: '/api/users/signup',
+      url: '/api/users/signin',
       method: 'post',
       body: {
         email,
@@ -47,7 +47,7 @@ const Signup = () => {
   }, [])
 
   return (
-    <SignupRps
+    <SigninRps
       values={{ email, password, isButtonDisabled }}
       business={{
         onEmailChangeHandler,
@@ -61,4 +61,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Signin
