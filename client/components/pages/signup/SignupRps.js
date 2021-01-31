@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
-const SignupRps = ({ values, business, refs }) => {
-  const { email, password, isButtonDisabled, errors } = values
+const SignupRps = ({ values, business, refs, renderables }) => {
+  const { email, password, isButtonDisabled } = values
   const {
     onSubmitHandler,
     onEmailChangeHandler,
@@ -9,21 +9,7 @@ const SignupRps = ({ values, business, refs }) => {
     onResetClickHandler,
   } = business
   const { firstInputRef } = refs
-
-  const renderWarningAlerts = useCallback(() => {
-    if (errors.length === 0) return
-
-    return (
-      <div className='alert alert-warning my-3' role='alert'>
-        <h4 className='mb-3'>Something needs to be fixed:</h4>
-        <ul>
-          {errors.map(({ message }, index) => (
-            <li key={index}>{message}</li>
-          ))}
-        </ul>
-      </div>
-    )
-  }, [errors])
+  const { errors } = renderables
 
   return (
     <div className='container'>
@@ -60,7 +46,7 @@ const SignupRps = ({ values, business, refs }) => {
           <button className='btn btn-primary'>Submit</button>
         </div>
       </form>
-      {renderWarningAlerts()}
+      {errors}
     </div>
   )
 }

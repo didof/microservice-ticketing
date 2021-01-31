@@ -4,13 +4,20 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 // rps
 import SignupRps from './SignupRps'
 
-import axios from 'axios'
+import useRequest from '../../../hooks/use-request'
 
 const Signup = ({ authService }) => {
   const [email, setEmail] = useState('test@test.com')
   const [password, setPassword] = useState('12345678')
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  const [errors, setErrors] = useState([])
+  const [doRequest, errors] = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: {
+      email,
+      password,
+    },
+  })
 
   useEffect(() => {
     setIsButtonDisabled(email === '' && password === '')
@@ -26,16 +33,7 @@ const Signup = ({ authService }) => {
 
   const onSubmitHandler = async event => {
     event.preventDefault()
-    try {
-      const response = await axios.post('/api/users/signup', {
-        email,
-        password,
-      })
-      console.log(response.data)
-      setErrors([])
-    } catch (err) {
-      setErrors(err.response.data.errors)
-    }
+    doRequest()
   }
 
   console.log()
@@ -48,7 +46,7 @@ const Signup = ({ authService }) => {
 
   return (
     <SignupRps
-      values={{ email, password, isButtonDisabled, errors }}
+      values={{ email, password, isButtonDisabled }}
       business={{
         onEmailChangeHandler,
         onPasswordChangeHandler,
@@ -56,6 +54,7 @@ const Signup = ({ authService }) => {
         onResetClickHandler,
       }}
       refs={{ firstInputRef }}
+      renderables={{ errors }}
     />
   )
 }
