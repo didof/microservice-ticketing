@@ -16,9 +16,5 @@ describe(route, () => {
 
       expect(response.body.currentUser.email).toEqual('test@test.com')
     })
-
-    it('responds with status 401 if not authorized', async () => {
-      const response = await request(app).get(route).send().expect(401)
-    })
   })
 })

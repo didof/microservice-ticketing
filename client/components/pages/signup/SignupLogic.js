@@ -1,5 +1,6 @@
 // core
 import { useState, useEffect, useRef, useCallback } from 'react'
+import Router from 'next/router'
 
 // rps
 import SignupRps from './SignupRps'
@@ -10,14 +11,17 @@ const Signup = ({ authService }) => {
   const [email, setEmail] = useState('test@test.com')
   const [password, setPassword] = useState('12345678')
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
-  const [doRequest, errors] = useRequest({
-    url: '/api/users/signup',
-    method: 'post',
-    body: {
-      email,
-      password,
+  const [doRequest, errors] = useRequest(
+    {
+      url: '/api/users/signup',
+      method: 'post',
+      body: {
+        email,
+        password,
+      },
     },
-  })
+    () => Router.replace('/')
+  )
 
   useEffect(() => {
     setIsButtonDisabled(email === '' && password === '')
@@ -35,8 +39,6 @@ const Signup = ({ authService }) => {
     event.preventDefault()
     doRequest()
   }
-
-  console.log()
 
   const onResetClickHandler = useCallback(() => {
     setEmail('')
