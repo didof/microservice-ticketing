@@ -33,8 +33,6 @@ const Signup = () => {
     firstInputRef.current.focus()
   }, [])
 
-  const sex = () => {}
-
   return (
     <SignupRps
       values={{ email, password, isButtonDisabled }}
@@ -45,9 +43,6 @@ const Signup = () => {
         onResetClickHandler,
       }}
       refs={{ firstInputRef }}
-      test={{
-        sex,
-      }}
     />
   )
 }
