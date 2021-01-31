@@ -8,6 +8,14 @@ build:
   local:
     push: false
   artifacts:
+    - image: didof/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '**/*.js'
+            dest: .
     - image: didof/auth
       context: auth
       docker:
