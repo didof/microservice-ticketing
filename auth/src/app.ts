@@ -8,8 +8,7 @@ import { currentUserRouter } from './routes/current-user'
 import { signupRouter } from './routes/signup'
 import { signinRouter } from './routes/signin'
 import { signoutRouter } from './routes/signout'
-import { errorHandler } from './middlewares/error-handler'
-import { NotFoundError } from './errors/not-found-error'
+import { errorHandler, NotFoundError } from '@ticketing-didof/common'
 
 const app = express()
 app.set('trust proxy', true)

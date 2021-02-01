@@ -1,41 +1,39 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response } from 'express'
 
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 
-import { User } from "../models/user";
+import { User } from '../models/user'
 
-import { body } from "express-validator";
-import { validateRequest } from "../middlewares/validate-request";
+import { body } from 'express-validator'
+import { validateRequest, BadRequestError } from '@ticketing-didof/common'
 
-import { BadRequestError } from "../errors/bad-request-error";
-
-const router = express.Router();
+const router = express.Router()
 
 router.post(
-  "/api/users/signup",
+  '/api/users/signup',
   [
-    body("email").isEmail().withMessage("E-mail must be valid"),
-    body("password")
+    body('email').isEmail().withMessage('E-mail must be valid'),
+    body('password')
       .trim()
       .isLength({ min: 4, max: 20 })
-      .withMessage("Password must be between 4 and 20 characters"),
+      .withMessage('Password must be between 4 and 20 characters'),
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email })
 
     if (existingUser) {
-      throw new BadRequestError("E-mail is already in use");
+      throw new BadRequestError('E-mail is already in use')
     }
 
     // generate and persist user
     const user = User.build({
       email,
       password,
-    });
-    await user.save();
+    })
+    await user.save()
 
     // generate jsonwebtoken
     const userJwt = jwt.sign(
@@ -44,15 +42,15 @@ router.post(
         email: user.email,
       },
       process.env.JWT_KEY!
-    );
+    )
 
     // store it on session object
     req.session = {
       jwt: userJwt,
-    };
+    }
 
-    return res.status(201).send(user);
+    return res.status(201).send(user)
   }
-);
+)
 
-export { router as signupRouter };
+export { router as signupRouter }
