@@ -1,18 +1,21 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose from 'mongoose'
 import { app } from '../app'
-import request from 'supertest'
+import mongoose from 'mongoose'
+import { MongoMemoryServer } from 'mongodb-memory-server'
+import jwt from 'jsonwebtoken'
 
 declare global {
   namespace NodeJS {
     interface Global {
-      signup(): Promise<string[]>
+      mockAuthentication(): string[]
     }
   }
 }
 
 let mongo: MongoMemoryServer
 beforeAll(async () => {
+  // mock KWT_KEY
+  process.env.JWT_KEY = 'testing'
+
   // establish mongoDB connection
   mongo = new MongoMemoryServer()
   const mongoUri = await mongo.getUri()
@@ -39,17 +42,24 @@ afterAll(async () => {
   await mongoose.connection.close()
 })
 
-global.signup = async () => {
-  const email = 'test@test.com'
-  const password = 'password'
+global.mockAuthentication = () => {
+  // Build a JWT payload  { id, email }
+  const payload = {
+    id: 'testId',
+    email: 'test@test.com',
+  }
 
-  const response = await request(app)
-    .post('/api/users/signup')
-    .send({
-      email,
-      password,
-    })
-    .expect(201)
+  // Create JWT
+  const token = jwt.sign(payload, process.env.JWT_KEY!)
 
-  return response.get('Set-Cookie')
+  // Build session object { jwt: myJWT }
+  const session = { jwt: token }
+
+  // take JSON and encode it as base64
+  const sessionJSON = JSON.stringify(session)
+
+  // return express:sess={myJWTencoded64}
+  const base64 = Buffer.from(sessionJSON).toString('base64')
+
+  return ['express:sess=' + base64]
 }
