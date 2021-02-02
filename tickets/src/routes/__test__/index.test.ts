@@ -1,6 +1,5 @@
 import { app } from '../../app'
 import request from 'supertest'
-import { Ticket } from '../../models/ticket'
 
 const createTicket = () => {
   return request(app)

@@ -6,6 +6,7 @@ import cookieSession from 'cookie-session'
 import { newTicketRouter } from './routes/new'
 import { showTicketRouter } from './routes/show'
 import { indexTicketRouter } from './routes/index'
+import { updateTicketRouter } from './routes/update'
 
 import {
   errorHandler,
@@ -28,6 +29,7 @@ app.use(currentUser)
 app.use(newTicketRouter)
 app.use(showTicketRouter)
 app.use(indexTicketRouter)
+app.use(updateTicketRouter)
 
 app.all('*', () => {
   throw new NotFoundError()
