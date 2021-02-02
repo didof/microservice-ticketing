@@ -1,5 +1,6 @@
 import { app } from '../../app'
 import request from 'supertest'
+import { Ticket } from '../../models/ticket'
 
 const route = '/api/tickets'
 
@@ -76,4 +77,24 @@ describe('input validation', () => {
   })
 })
 
-it('creates a ticket for valid inputs', async () => {})
+it('creates a ticket for valid inputs', async () => {
+  let tickets = await Ticket.find({})
+  expect(tickets.length).toEqual(0)
+
+  const payload = {
+    title: 'Rush',
+    price: 10,
+  }
+
+  const response = await request(app)
+    .post(route)
+    .set('Cookie', global.mockAuthentication())
+    .send(payload)
+
+  expect(response.status).toEqual(201)
+
+  tickets = await Ticket.find({})
+  expect(tickets.length).toEqual(1)
+  expect(tickets[0].title).toEqual(payload.title)
+  expect(tickets[0].price).toEqual(payload.price)
+})

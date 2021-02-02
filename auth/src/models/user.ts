@@ -1,21 +1,21 @@
-import mongoose from "mongoose";
-import { Password } from "../services/password";
+import mongoose from 'mongoose'
+import { Password } from '../services/password'
 
 // what it takes to create an user
 interface UserAttrs {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 // what the entire collection of users looks like
 interface UserModel extends mongoose.Model<any> {
-  build(attrs: UserAttrs): UserDoc;
+  build(attrs: UserAttrs): UserDoc
 }
 
 // what the single user has
 interface UserDoc extends mongoose.Document {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 const userSchema = new mongoose.Schema(
@@ -32,27 +32,27 @@ const userSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        delete ret.password;
-        ret.id = ret._id;
-        delete ret._id;
+        delete ret.password
+        ret.id = ret._id
+        delete ret._id
       },
       versionKey: false,
     },
   }
-);
+)
 
-userSchema.pre("save", async function (done) {
-  if (this.isModified("password")) {
-    const hashed = await Password.toHash(this.get("password"));
-    this.set("password", hashed);
+userSchema.pre('save', async function (done) {
+  if (this.isModified('password')) {
+    const hashed = await Password.toHash(this.get('password'))
+    this.set('password', hashed)
   }
-  done();
-});
+  done()
+})
 
 userSchema.statics.build = (attrs: UserAttrs) => {
-  return new User(attrs);
-};
+  return new User(attrs)
+}
 
-const User = mongoose.model<UserDoc, UserModel>("User", userSchema);
+const User = mongoose.model<UserDoc, UserModel>('User', userSchema)
 
-export { User };
+export { User }
