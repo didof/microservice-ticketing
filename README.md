@@ -13,3 +13,11 @@ create:
 
 log:
 `kubectl get secrets`
+
+---
+
+### NATS Straming Server
+
+Find documentaion over [docs.nats.io](https://docs.nats.io/)
+The official Dockerimage is [nats-streaming](https://hub.docker.com/_/nats-streaming)
+On the microservice use [node-nats-streaming](https://www.npmjs.com/package/node-nats-streaming) to communicate with NATS Streaming Server
